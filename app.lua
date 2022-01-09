@@ -2,44 +2,8 @@ local lfs = love.filesystem
 
 local app = {}
 
-app.stack = {}
 app.ready = false
 app.url = "http://2dengine.com/report/"
-
---- Pushes a state object onto the stack
--- @param n require path
--- @param ... arguments passed to the "create" function
--- @return state object
-function app.pushstate(n, ...)
-  local c = require(n)
-  local obj = c:instance()
-  app.state = obj
-  obj:create(...)
-  table.insert(app.stack, obj)
-  return obj
-end
-
---- Pops a state object from the stack
--- @return the removed state object
-function app.popstate()
-  local obj = table.remove(app.stack)
-  if obj then
-    obj:destroy()
-    app.state = app.stack[#app.stack]
-  end
-  return obj
-end
-
---- Calls the current state object
--- @param n function name
--- @param ... arguments
--- @return return values
-function app.callstate(n, ...)
-  local obj = app.state
-  if obj and obj[n] then
-    return obj[n](obj, ...)
-  end
-end
 
 --- Prints an error and saves the report to file
 -- @param e Error
